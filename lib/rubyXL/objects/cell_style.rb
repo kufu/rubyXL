@@ -3,7 +3,7 @@ require 'rubyXL/objects/simple_types'
 
 module RubyXL
 
-  # http://www.schemacentral.com/sc/ooxml/e-ssml_cellStyle-1.html
+  # http://www.datypic.com/sc/ooxml/e-ssml_cellStyle-1.html
   class CellStyle < OOXMLObject
     define_attribute(:name,          :string)
     define_attribute(:xfId,          :int,  :required => true)
@@ -14,28 +14,28 @@ module RubyXL
     define_element_name 'cellStyle'
   end
 
-  # http://www.schemacentral.com/sc/ooxml/e-ssml_alignment-1.html
+  # http://www.datypic.com/sc/ooxml/e-ssml_alignment-1.html
   class Alignment < OOXMLObject
     define_attribute(:horizontal,      RubyXL::ST_HorizontalAlignment)
     define_attribute(:vertical,        RubyXL::ST_VerticalAlignment)
-    define_attribute(:textRotation,    :int)
+    define_attribute(:textRotation,    :uint)
     define_attribute(:wrapText,        :bool)
-    define_attribute(:indent,          :int)
+    define_attribute(:indent,          :uint)
     define_attribute(:relativeIndent,  :int)
     define_attribute(:justifyLastLine, :bool)
     define_attribute(:shrinkToFit,     :bool)
-    define_attribute(:readingOrder,    :int)
+    define_attribute(:readingOrder,    :uint)
     define_element_name 'alignment'
   end
 
-  # http://www.schemacentral.com/sc/ooxml/e-ssml_protection-1.html
+  # http://www.datypic.com/sc/ooxml/e-ssml_protection-1.html
   class Protection < OOXMLObject
     define_attribute(:locked, :bool)
     define_attribute(:hidden, :bool)
     define_element_name 'protection'
   end
 
-  # http://www.schemacentral.com/sc/ooxml/e-ssml_xf-1.html
+  # http://www.datypic.com/sc/ooxml/e-ssml_xf-1.html
   class XF < OOXMLObject
     define_attribute(:numFmtId,          :int)
     define_attribute(:fontId,            :int)
@@ -55,7 +55,7 @@ module RubyXL
     define_element_name 'xf'
   end
 
-  # http://www.schemacentral.com/sc/ooxml/e-ssml_numFmt-1.html
+  # http://www.datypic.com/sc/ooxml/e-ssml_numFmt-1.html
   class NumFmt < OOXMLObject
     define_attribute(:numFmtId,   :int,    :required => true)
     define_attribute(:formatCode, :string, :required => true)

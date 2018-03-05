@@ -26,6 +26,8 @@ describe RubyXL::Cell do
       cell = @worksheet.add_cell(r, c, "#{r}:#{c}")
       expect(cell.datatype).to eq(RubyXL::DataType::RAW_STRING)
 
+      cell = @worksheet.add_cell(r, c, RubyXL::RichText.new(:t => RubyXL::Text.new(:value => 'Hello')))
+      expect(cell.datatype).to eq(RubyXL::DataType::INLINE_STRING)
     end
   end
 
@@ -143,6 +145,22 @@ describe RubyXL::Cell do
     end
   end
 
+  describe '.change_text_indent' do
+    it 'should cause the cell to have the corresponding text indent' do
+      expect(@cell.text_indent).to be_nil
+      @cell.change_text_indent(2)
+      expect(@cell.text_indent).to eq(2)
+    end
+
+    it "should not cause other cells with the same style to have text indent" do
+      another_cell = @worksheet[1][0]
+      another_cell.style_index = @cell.style_index
+      expect(another_cell.text_indent).to be_nil
+      @cell.change_text_indent(2)
+      expect(another_cell.text_indent).to be_nil
+    end
+  end
+
   describe '.change_border_color' do
     it 'should cause cell to have a colored top border' do
       expect(@cell.get_border_color(:top)).to be_nil
@@ -224,6 +242,11 @@ describe RubyXL::Cell do
       expect(@cell.value).to eq(date)
     end
 
+    it 'should properly return value of inlineStr' do
+      cell = @worksheet.add_cell(5, 5, RubyXL::RichText.new(:t => RubyXL::Text.new(:value => 'Hello')))
+      expect(cell.value).to eq('Hello')
+    end
+
     it "should properly handle numeric values" do
       @cell.datatype = nil
       @cell.raw_value = '1'
@@ -275,6 +298,8 @@ describe RubyXL::Cell do
         expect(@cell.value).to eq(Date.parse('April 20, 2012'))
         @cell.change_contents(35981)
         expect(@cell.value).to eq(Date.parse('July 5, 1998'))
+        @cell.change_contents(0.019467592592592595)
+        expect(@cell.value).to eq(DateTime.parse('1899-12-31T00:28:02+00:00'))
         @cell.change_contents(1)
         expect(@cell.value).to eq(Date.parse('January 1, 1900'))
         @cell.change_contents(59)
@@ -298,6 +323,21 @@ describe RubyXL::Cell do
         expect(@cell.value).to eq(Date.parse('July 5, 1998'))
       end
     end
+
+    context 'date before January 1, 1900' do
+      it 'should parse as date' do
+        @cell.set_number_format('h:mm:ss')
+        @cell.datatype = nil
+
+        @cell.raw_value = '0.97726851851851848'
+        expect(@cell.is_date?).to be(true)
+        expect(@cell.value).to eq(DateTime.parse('1899-12-31 23:27:16'))
+        @cell.raw_value = '1.9467592592592595E-2'
+        expect(@cell.is_date?).to be(true)
+        expect(@cell.value).to eq(DateTime.parse('1899-12-31 00:28:02'))
+      end
+    end
+
   end
 
   describe '.change_contents' do
