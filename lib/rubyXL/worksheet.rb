@@ -60,6 +60,9 @@ module LegacyWorksheet
           c.is = data
           c.datatype = RubyXL::DataType::INLINE_STRING
         when NilClass         then nil
+        else
+          c.raw_value = data
+          c.datatype = RubyXL::DataType::RAW_STRING
         end
       end
 

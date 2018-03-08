@@ -28,6 +28,9 @@ describe RubyXL::Cell do
 
       cell = @worksheet.add_cell(r, c, RubyXL::RichText.new(:t => RubyXL::Text.new(:value => 'Hello')))
       expect(cell.datatype).to eq(RubyXL::DataType::INLINE_STRING)
+
+      cell = @worksheet.add_cell(r, c, Date.today)
+      expect(cell.datatype).to eq(RubyXL::DataType::RAW_STRING)
     end
   end
 
@@ -240,10 +243,13 @@ describe RubyXL::Cell do
       @cell.change_contents(date)
       expect(@cell).to receive(:is_date?).at_least(1).and_return(true)
       expect(@cell.value).to eq(date)
+
+      cell = @worksheet.add_cell(5, 5, date)
+      expect(cell.value).to eq(date)
     end
 
     it 'should properly return value of inlineStr' do
-      cell = @worksheet.add_cell(5, 5, RubyXL::RichText.new(:t => RubyXL::Text.new(:value => 'Hello')))
+      cell = @worksheet.add_cell(6, 6, RubyXL::RichText.new(:t => RubyXL::Text.new(:value => 'Hello')))
       expect(cell.value).to eq('Hello')
     end
 
